@@ -2,13 +2,23 @@ var http = require('http');
 var fs = require('fs');
 var path = require('path');
 var url = require('url');
-var WebSocketServer = require('websocket').server;
-var wsServer = new WebSocketServer({
-    httpServer:server
+var WebSocketServer = require('ws').Server;
+var server = http.createServer(httpHandle);
+server.listen(8888);
+var wss = new WebSocketServer({
+    port:8899
+});
+var connection;
+
+wss.on('connection',function (ws) {
+    console.log('client connection:');
+    ws.on('message',function (msg) {
+        console.log('clientMsg:'+msg);
+        ws.send('server');
+    });
 });
 
-http.createServer(httpHandle).listen(8082);
-console.log('listen 8082');
+console.log('listen 8888');
 
 function httpHandle(req,res) {
     var pathname = url.parse(req.url).pathname;

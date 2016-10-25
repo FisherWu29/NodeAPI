@@ -9,7 +9,16 @@
 </body>
 <script>
     if(window.WebSocket != undefined){
-        var connection = new WebSocket('ws://localhost:8082');
+        var connection = new WebSocket('ws://localhost:8899');
+        connection.onopen = function () {
+            setInterval(function () {
+                connection.send('client');
+            },3000)
+        };
+        connection.onmessage = handleMessage;
+    }
+    function handleMessage(msg) {
+        console.log(msg.data);
     }
 </script>
 </html>
